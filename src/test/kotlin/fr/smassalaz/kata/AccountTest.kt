@@ -46,18 +46,42 @@ class AccountTest {
     }
 
     @Test
-    fun`Making a withdrawal of an account with sufficient fund should add a withdrawal operation`() {
+    fun`Making a withdrawal of an account with sufficient funds should add a withdrawal operation`() {
         val repository = mockk<OperationRepository>()
         every { repository.addOperation(any()) } just Runs
         val account = Account(repository)
-
         val amount = Amount(BigDecimal.valueOf(42))
         val date = LocalDateTime.now()
+        every { repository.getOperations() } returns listOf(
+            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
+        )
 
         account.withdraw(amount, date)
 
         verify {
             repository.addOperation(Operation(WITHDRAWAL, date, amount))
+        }
+    }
+
+    @Test(expected = InsufficientFundsException::class)
+    fun`Making a withdrawal of an account without sufficient funds should add a withdrawal operation`() {
+        val repository = mockk<OperationRepository>()
+        every { repository.addOperation(any()) } just Runs
+        every { repository.getOperations() } returns listOf(
+            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
+        )
+        val account = Account(repository)
+
+        val amount = Amount(BigDecimal.valueOf(42.1))
+        val date = LocalDateTime.now()
+
+        try {
+            account.withdraw(amount, date)
+        } catch (e: Exception) {
+            verify(exactly = 0) {
+                repository.addOperation(Operation(WITHDRAWAL, date, amount))
+            }
+            throw e
         }
     }
 }

@@ -14,8 +14,18 @@ class Account (private val operationRepo: OperationRepository) {
     }
 
     fun withdraw(amount: Amount, date: LocalDateTime) {
+        val balance = computeCurrentBalance()
+        if(balance.value < amount.value) {
+            throw InsufficientFundsException()
+        }
         operationRepo.addOperation(
             Operation(OperationType.WITHDRAWAL, date, amount)
         )
+    }
+
+    private fun computeCurrentBalance(): Amount {
+        var balance = Amount(BigDecimal.ZERO)
+        operationRepo.getOperations().forEach { balance = it.computeBalance(balance) }
+        return balance
     }
 }
