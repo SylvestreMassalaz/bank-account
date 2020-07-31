@@ -13,7 +13,9 @@ class Account (private val operationRepo: OperationRepository) {
         )
     }
 
-    fun withdraw(amount: Amount, date: LocalDateTime?) {
-        TODO("Not yet implemented")
+    fun withdraw(amount: Amount, date: LocalDateTime) {
+        operationRepo.addOperation(
+            Operation(OperationType.WITHDRAWAL, date, amount)
+        )
     }
 }
