@@ -4,11 +4,9 @@ class OperationRepositoryImpl(initialOperations: List<Operation> = listOf()) : O
 
     private val operations = initialOperations.toMutableList()
 
-    override fun getOperations(): List<Operation> {
-        TODO("Not yet impÈlemented")
-    }
+    override fun getOperations(): List<Operation> = operations.toList()
 
     override fun addOperation(operation: Operation) {
-        TODO("Not yet implemented")
+        operations += operation
     }
 }
