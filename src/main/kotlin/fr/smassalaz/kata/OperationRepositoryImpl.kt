@@ -7,6 +7,9 @@ class OperationRepositoryImpl(initialOperations: List<Operation> = listOf()) : O
     override fun getOperations(): List<Operation> = operations.toList()
 
     override fun addOperation(operation: Operation) {
+        if(operations.isNotEmpty() && operations.last().date > operation.date) {
+            throw OperationTooOldException()
+        }
         operations += operation
     }
 }

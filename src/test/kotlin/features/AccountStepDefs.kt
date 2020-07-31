@@ -49,6 +49,18 @@ class AccountStepDefs : En {
             }
         }
 
+        When("I withdraw an amount of {bigdecimal} at date {int}-{int}-{int} {int}:{int}")
+        { amount: BigDecimal, year: Int, month: Int, day: Int, hour: Int, minute: Int ->
+            try {
+                account.withdraw(
+                    amount = Amount(amount),
+                    date = LocalDateTime.of(year, month, day, hour, minute)
+                )
+            } catch (e: Exception) {
+                caughtExceptions.add(e)
+            }
+        }
+
         Then("The operation should be accepted") {
             assertTrue(caughtExceptions.isEmpty())
         }
