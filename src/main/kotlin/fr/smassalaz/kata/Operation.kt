@@ -14,7 +14,7 @@ data class Operation(val type: OperationType, val date: LocalDateTime, val amoun
     }
 }
 
-enum class OperationType(val apply: (Amount, Amount) -> Amount) {
+enum class OperationType(val apply: (balance: Amount, amount: Amount) -> Amount) {
     DEPOSIT({ balance, amount -> balance + amount }),
     WITHDRAWAL({ balance, amount -> balance - amount })
 }

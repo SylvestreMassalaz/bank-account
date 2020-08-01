@@ -32,6 +32,15 @@ class Account(private val operationRepo: OperationRepository, private val printe
         operationRepo.getOperations().fold(Amount(ZERO)) { balance, op -> op.computeBalance(balance) }
 
     fun printStatements() {
-        printer.printStatements(listOf())
+        var balance = Amount(ZERO)
+        val statements = operationRepo.getOperations().map {
+            Statement(
+                type = it.type,
+                date = it.date,
+                amount = it.amount,
+                balance = it.computeBalance(balance).apply { balance = this }
+            )
+        }
+        printer.printStatements(statements)
     }
 }
