@@ -1,24 +1,20 @@
 package fr.smassalaz.kata
 
-import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.time.LocalDateTime
 
-class Account (private val operationRepo: OperationRepository) {
+class Account(private val operationRepo: OperationRepository) {
+
     fun deposit(amount: Amount, date: LocalDateTime) {
-        if(amount.value < BigDecimal.ZERO) {
-            throw NegativeAMountException()
-        }
+        checkForNegativeAmount(amount)
         operationRepo.addOperation(
             Operation(OperationType.DEPOSIT, date, amount)
         )
     }
 
     fun withdraw(amount: Amount, date: LocalDateTime) {
-        if(amount.value < BigDecimal.ZERO) {
-            throw NegativeAMountException()
-        }
-        val balance = computeCurrentBalance()
-        if(balance.value < amount.value) {
+        checkForNegativeAmount(amount)
+        if (computeCurrentBalance() < amount) {
             throw InsufficientFundsException()
         }
         operationRepo.addOperation(
@@ -26,9 +22,12 @@ class Account (private val operationRepo: OperationRepository) {
         )
     }
 
-    private fun computeCurrentBalance(): Amount {
-        var balance = Amount(BigDecimal.ZERO)
-        operationRepo.getOperations().forEach { balance = it.computeBalance(balance) }
-        return balance
+    private fun checkForNegativeAmount(amount: Amount) {
+        if (amount.isNegative()) {
+            throw NegativeAMountException()
+        }
     }
+
+    private fun computeCurrentBalance() =
+        operationRepo.getOperations().fold(Amount(ZERO)) { balance, op -> op.computeBalance(balance) }
 }
