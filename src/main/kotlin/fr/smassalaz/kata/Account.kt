@@ -32,6 +32,6 @@ class Account(private val operationRepo: OperationRepository, private val printe
         operationRepo.getOperations().fold(Amount(ZERO)) { balance, op -> op.computeBalance(balance) }
 
     fun printStatements() {
-        TODO("Not yet implemented")
+        printer.printStatements(listOf())
     }
 }

@@ -5,6 +5,7 @@ import fr.smassalaz.kata.OperationType.WITHDRAWAL
 import io.mockk.*
 import org.junit.Test
 import java.math.BigDecimal
+import java.math.BigDecimal.valueOf
 import java.time.LocalDateTime
 
 class AccountTest {
@@ -16,7 +17,7 @@ class AccountTest {
         every { repository.addOperation(any()) } just Runs
         val account = Account(repository, printer)
 
-        val amount = Amount(BigDecimal.valueOf(42))
+        val amount = Amount(valueOf(42))
         val date = LocalDateTime.now()
 
         account.deposit(amount, date)
@@ -33,7 +34,7 @@ class AccountTest {
         every { repository.addOperation(any()) } just Runs
         val account = Account(repository, printer)
 
-        val amount = Amount(BigDecimal.valueOf(-42))
+        val amount = Amount(valueOf(-42))
         val date = LocalDateTime.now()
 
         try {
@@ -53,10 +54,10 @@ class AccountTest {
         val printer = mockk<StatementPrinter>()
         every { repository.addOperation(any()) } just Runs
         val account = Account(repository, printer)
-        val amount = Amount(BigDecimal.valueOf(42))
+        val amount = Amount(valueOf(42))
         val date = LocalDateTime.now()
         every { repository.getOperations() } returns listOf(
-            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
+            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(valueOf(42)))
         )
 
         account.withdraw(amount, date)
@@ -73,11 +74,11 @@ class AccountTest {
 
         every { repository.addOperation(any()) } just Runs
         every { repository.getOperations() } returns listOf(
-            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
+            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(valueOf(42)))
         )
         val account = Account(repository, printer)
 
-        val amount = Amount(BigDecimal.valueOf(42.1))
+        val amount = Amount(valueOf(42.1))
         val date = LocalDateTime.now()
 
         try {
@@ -98,7 +99,7 @@ class AccountTest {
         every { repository.addOperation(any()) } just Runs
         val account = Account(repository, printer)
 
-        val amount = Amount(BigDecimal.valueOf(-42))
+        val amount = Amount(valueOf(-42))
         val date = LocalDateTime.now()
 
         try {
@@ -126,6 +127,31 @@ class AccountTest {
 
         verify (exactly = 1) {
             printer.printStatements(listOf<Statement>())
+        }
+    }
+
+    @Test
+    fun `A non empty account should print the right statements with the correct balance`() {
+        val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
+
+        val baseDate = LocalDateTime.of(2020, 7 , 1, 9, 0)
+
+        every { printer.printStatements(any()) } just Runs
+        every { repository.getOperations() } returns listOf<Operation>(
+            Operation.deposit(baseDate, Amount(valueOf(2500))),
+            Operation.withdrawal(baseDate.plusMinutes(30), Amount(valueOf(770)))
+        )
+
+        val account = Account(repository, printer)
+
+        account.printStatements()
+
+        verify(exactly = 1) {
+            printer.printStatements(listOf(
+                Statement(DEPOSIT, baseDate, Amount(valueOf(2500)), Amount(valueOf(2500))),
+                Statement(WITHDRAWAL, baseDate.plusMinutes(30), Amount(valueOf(770)), Amount(valueOf(1730)))
+            ))
         }
     }
 }

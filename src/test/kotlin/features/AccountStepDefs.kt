@@ -65,6 +65,10 @@ class AccountStepDefs : En {
             }
         }
 
+        When("The user prints it's statements") {
+            account.printStatements()
+        }
+
         Then("The operation should be accepted") {
             assertTrue(caughtExceptions.isEmpty())
         }
