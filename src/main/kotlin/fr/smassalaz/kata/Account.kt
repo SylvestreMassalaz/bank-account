@@ -8,7 +8,7 @@ class Account(private val operationRepo: OperationRepository) {
     fun deposit(amount: Amount, date: LocalDateTime) {
         checkForNegativeAmount(amount)
         operationRepo.addOperation(
-            Operation(OperationType.DEPOSIT, date, amount)
+            Operation.deposit(date, amount)
         )
     }
 
@@ -18,7 +18,7 @@ class Account(private val operationRepo: OperationRepository) {
             throw InsufficientFundsException()
         }
         operationRepo.addOperation(
-            Operation(OperationType.WITHDRAWAL, date, amount)
+            Operation.withdrawal(date, amount)
         )
     }
 
