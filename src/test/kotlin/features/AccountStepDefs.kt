@@ -16,6 +16,8 @@ class AccountStepDefs : En {
 
     private lateinit var operationRepository: OperationRepository
 
+    private lateinit var statementPrinter: StatementPrinterTestImpl
+
     private lateinit var account: Account
 
     private var caughtExceptions = mutableListOf<Exception>()
@@ -32,7 +34,9 @@ class AccountStepDefs : En {
 
             operationRepository = OperationRepositoryImpl(ops)
 
-            account = Account(operationRepository)
+            statementPrinter = StatementPrinterTestImpl()
+
+            account = Account(operationRepository, statementPrinter)
 
             caughtExceptions = mutableListOf()
         }
@@ -79,6 +83,19 @@ class AccountStepDefs : En {
             }
 
             assertEquals(expected, operationRepository.getOperations())
+        }
+
+        Then("The statement printing should have the following lines") { table: DataTable ->
+            val expected: List<Statement> = table.asMaps().map {
+                Statement(
+                    type = OperationType.valueOf(it.getValue("type")),
+                    date = it.getValue("date").toLocalDateTime(),
+                    amount = Amount(it.getValue("amount").toBigDecimal()),
+                    balance = Amount(it.getValue("balance").toBigDecimal())
+                )
+            }
+
+            assertEquals(expected, statementPrinter.statements)
         }
     }
 }

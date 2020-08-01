@@ -3,7 +3,7 @@ package fr.smassalaz.kata
 import java.math.BigDecimal.ZERO
 import java.time.LocalDateTime
 
-class Account(private val operationRepo: OperationRepository) {
+class Account(private val operationRepo: OperationRepository, private val printer: StatementPrinter) {
 
     fun deposit(amount: Amount, date: LocalDateTime) {
         checkForNegativeAmount(amount)

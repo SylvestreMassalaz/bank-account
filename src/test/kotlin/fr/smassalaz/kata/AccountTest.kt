@@ -12,8 +12,9 @@ class AccountTest {
     @Test
     fun `Making a valid deposit should add the matching operation`() {
         val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
         every { repository.addOperation(any()) } just Runs
-        val account = Account(repository)
+        val account = Account(repository, printer)
 
         val amount = Amount(BigDecimal.valueOf(42))
         val date = LocalDateTime.now()
@@ -28,8 +29,9 @@ class AccountTest {
     @Test(expected = NegativeAMountException::class)
     fun `Making a deposit of a negative amount of money should be invalid`(){
         val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
         every { repository.addOperation(any()) } just Runs
-        val account = Account(repository)
+        val account = Account(repository, printer)
 
         val amount = Amount(BigDecimal.valueOf(-42))
         val date = LocalDateTime.now()
@@ -48,8 +50,9 @@ class AccountTest {
     @Test
     fun`Making a withdrawal of an account with sufficient funds should add a withdrawal operation`() {
         val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
         every { repository.addOperation(any()) } just Runs
-        val account = Account(repository)
+        val account = Account(repository, printer)
         val amount = Amount(BigDecimal.valueOf(42))
         val date = LocalDateTime.now()
         every { repository.getOperations() } returns listOf(
@@ -66,11 +69,13 @@ class AccountTest {
     @Test(expected = InsufficientFundsException::class)
     fun`Making a withdrawal of an account without sufficient funds should add a withdrawal operation`() {
         val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
+
         every { repository.addOperation(any()) } just Runs
         every { repository.getOperations() } returns listOf(
             Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
         )
-        val account = Account(repository)
+        val account = Account(repository, printer)
 
         val amount = Amount(BigDecimal.valueOf(42.1))
         val date = LocalDateTime.now()
@@ -88,8 +93,10 @@ class AccountTest {
     @Test(expected = NegativeAMountException::class)
     fun `Making a withdrawal of a negative amount of money should be invalid`(){
         val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
+
         every { repository.addOperation(any()) } just Runs
-        val account = Account(repository)
+        val account = Account(repository, printer)
 
         val amount = Amount(BigDecimal.valueOf(-42))
         val date = LocalDateTime.now()
