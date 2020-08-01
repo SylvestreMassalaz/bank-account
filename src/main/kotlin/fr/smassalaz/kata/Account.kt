@@ -14,6 +14,9 @@ class Account (private val operationRepo: OperationRepository) {
     }
 
     fun withdraw(amount: Amount, date: LocalDateTime) {
+        if(amount.value < BigDecimal.ZERO) {
+            throw NegativeAMountException()
+        }
         val balance = computeCurrentBalance()
         if(balance.value < amount.value) {
             throw InsufficientFundsException()

@@ -84,4 +84,24 @@ class AccountTest {
             throw e
         }
     }
+
+    @Test(expected = NegativeAMountException::class)
+    fun `Making a withdrawal of a negative amount of money should be invalid`(){
+        val repository = mockk<OperationRepository>()
+        every { repository.addOperation(any()) } just Runs
+        val account = Account(repository)
+
+        val amount = Amount(BigDecimal.valueOf(-42))
+        val date = LocalDateTime.now()
+
+        try {
+            account.withdraw(amount, date)
+        } catch(e: Exception) {
+            verify(exactly = 0) {
+                repository.addOperation(Operation(WITHDRAWAL, date, amount))
+            }
+
+            throw e
+        }
+    }
 }
