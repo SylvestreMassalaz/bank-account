@@ -1,6 +1,5 @@
 package fr.smassalaz.kata
 
-import java.math.BigDecimal.ZERO
 import java.time.LocalDateTime
 
 class Account(private val operationRepo: OperationRepository, private val printer: StatementPrinter) {
@@ -29,10 +28,10 @@ class Account(private val operationRepo: OperationRepository, private val printe
     }
 
     private fun computeCurrentBalance() =
-        operationRepo.getOperations().fold(Amount(ZERO)) { balance, op -> op.computeBalance(balance) }
+        operationRepo.getOperations().fold(Amount.ZERO) { balance, op -> op.computeBalance(balance) }
 
     fun printStatements() {
-        var balance = Amount(ZERO)
+        var balance = Amount.ZERO
         val statements = operationRepo.getOperations().map {
             Statement(
                 type = it.type,

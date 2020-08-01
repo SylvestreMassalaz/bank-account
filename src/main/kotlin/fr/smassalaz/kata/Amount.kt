@@ -11,4 +11,8 @@ data class Amount(val value: BigDecimal) : Comparable<Amount> {
     operator fun plus(increment: Amount) = Amount(value + increment.value)
 
     operator fun minus(decrement: Amount) = Amount(value - decrement.value)
+
+    companion object {
+        val ZERO = Amount(BigDecimal.ZERO)
+    }
 }
