@@ -1,6 +1,5 @@
 package fr.smassalaz.kata
 
-import junit.framework.TestCase
 import org.junit.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals
@@ -20,6 +19,7 @@ class AmountTest {
     fun `addition should work`() {
         val amount1 = Amount(BigDecimal.valueOf(1))
         val amount2 = Amount(BigDecimal.valueOf(2))
+
         assertEquals(Amount(BigDecimal.valueOf(3)), amount1 + amount2)
     }
 
@@ -27,6 +27,21 @@ class AmountTest {
     fun `subtraction should work`() {
         val amount1 = Amount(BigDecimal.valueOf(1))
         val amount2 = Amount(BigDecimal.valueOf(2))
+
         assertEquals(Amount(BigDecimal.valueOf(-1)), amount1 - amount2)
+    }
+
+    @Test
+    fun `Comparing two amounts should work as intended`() {
+        val amount1 = Amount(BigDecimal.valueOf(1))
+        val amount2 = Amount(BigDecimal.valueOf(2))
+        val amount3 = Amount(BigDecimal.valueOf(-2))
+
+        assertTrue(amount1 < amount2)
+        assertFalse(amount1 > amount2)
+        assertTrue(amount3 < amount1)
+        assertTrue(amount3 < amount2)
+        assertFalse(amount3 > amount1)
+        assertFalse(amount3 > amount2)
     }
 }
