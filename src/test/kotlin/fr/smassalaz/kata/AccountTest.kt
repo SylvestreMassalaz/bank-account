@@ -111,4 +111,21 @@ class AccountTest {
             throw e
         }
     }
+
+    @Test
+    fun `An empty account should print no statements`() {
+        val repository = mockk<OperationRepository>()
+        val printer = mockk<StatementPrinter>()
+
+        every { printer.printStatements(any()) } just Runs
+        every { repository.getOperations() } returns listOf<Operation>()
+
+        val account = Account(repository, printer)
+
+        account.printStatements()
+
+        verify (exactly = 1) {
+            printer.printStatements(listOf<Statement>())
+        }
+    }
 }
