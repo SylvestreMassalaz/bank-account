@@ -1,7 +1,8 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.business
 
-import fr.smassalaz.kata.OperationType.DEPOSIT
-import fr.smassalaz.kata.OperationType.WITHDRAWAL
+import fr.smassalaz.kata.business.*
+import fr.smassalaz.kata.business.OperationType.DEPOSIT
+import fr.smassalaz.kata.business.OperationType.WITHDRAWAL
 import io.mockk.*
 import org.junit.Test
 import java.math.BigDecimal.valueOf
@@ -53,7 +54,10 @@ class AccountTest {
         val amount = Amount(valueOf(42))
         val date = LocalDateTime.now()
         every { repository.getOperations() } returns listOf(
-            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(valueOf(42)))
+            Operation(
+                DEPOSIT, LocalDateTime.now().minusMinutes(5),
+                Amount(valueOf(42))
+            )
         )
 
         account.withdraw(amount, date)
@@ -69,7 +73,10 @@ class AccountTest {
 
         every { repository.addOperation(any()) } just Runs
         every { repository.getOperations() } returns listOf(
-            Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(valueOf(42)))
+            Operation(
+                DEPOSIT, LocalDateTime.now().minusMinutes(5),
+                Amount(valueOf(42))
+            )
         )
         val account = Account(repository)
 
@@ -80,7 +87,13 @@ class AccountTest {
             account.withdraw(amount, date)
         } catch (e: Exception) {
             verify(exactly = 0) {
-                repository.addOperation(Operation(WITHDRAWAL, date, amount))
+                repository.addOperation(
+                    Operation(
+                        WITHDRAWAL,
+                        date,
+                        amount
+                    )
+                )
             }
             throw e
         }
@@ -100,7 +113,13 @@ class AccountTest {
             account.withdraw(amount, date)
         } catch (e: Exception) {
             verify(exactly = 0) {
-                repository.addOperation(Operation(WITHDRAWAL, date, amount))
+                repository.addOperation(
+                    Operation(
+                        WITHDRAWAL,
+                        date,
+                        amount
+                    )
+                )
             }
 
             throw e
@@ -134,7 +153,9 @@ class AccountTest {
         every { printer.printStatements(any()) } just Runs
         every { repository.getOperations() } returns listOf(
             Operation.deposit(baseDate, Amount(valueOf(2500))),
-            Operation.withdrawal(baseDate.plusMinutes(30), Amount(valueOf(770)))
+            Operation.withdrawal(baseDate.plusMinutes(30),
+                Amount(valueOf(770))
+            )
         )
 
         val account = Account(repository)
@@ -144,8 +165,16 @@ class AccountTest {
         verify(exactly = 1) {
             printer.printStatements(
                 listOf(
-                    Statement(WITHDRAWAL, baseDate.plusMinutes(30), Amount(valueOf(770)), Amount(valueOf(1730))),
-                    Statement(DEPOSIT, baseDate, Amount(valueOf(2500)), Amount(valueOf(2500)))
+                    Statement(
+                        WITHDRAWAL, baseDate.plusMinutes(30),
+                        Amount(valueOf(770)),
+                        Amount(valueOf(1730))
+                    ),
+                    Statement(
+                        DEPOSIT, baseDate,
+                        Amount(valueOf(2500)),
+                        Amount(valueOf(2500))
+                    )
                 )
             )
         }

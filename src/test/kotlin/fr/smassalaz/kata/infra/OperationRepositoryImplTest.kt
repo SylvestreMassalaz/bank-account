@@ -1,6 +1,10 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.infra
 
-import fr.smassalaz.kata.OperationType.DEPOSIT
+import fr.smassalaz.kata.business.OperationType.DEPOSIT
+import fr.smassalaz.kata.business.Amount
+import fr.smassalaz.kata.business.Operation
+import fr.smassalaz.kata.business.OperationTooOldException
+import fr.smassalaz.kata.infra.OperationRepositoryImpl
 import org.junit.Test
 import java.lang.Exception
 import java.math.BigDecimal
@@ -13,7 +17,10 @@ class OperationRepositoryImplTest {
     @Test
     fun `adding an operation should enable to see it the list of existing operations`() {
         val repository = OperationRepositoryImpl()
-        val operation = Operation(DEPOSIT, LocalDateTime.now(), Amount(BigDecimal.valueOf(42)))
+        val operation = Operation(
+            DEPOSIT, LocalDateTime.now(),
+            Amount(BigDecimal.valueOf(42))
+        )
 
         repository.addOperation(operation)
 
@@ -22,8 +29,14 @@ class OperationRepositoryImplTest {
 
     @Test(expected = OperationTooOldException::class)
     fun `Adding an operation that is before the last registered one should fail`() {
-        val oldOperation = Operation(DEPOSIT, LocalDateTime.now(), Amount(BigDecimal.valueOf(42)))
-        val operation1 = Operation(DEPOSIT, LocalDateTime.now().minusMinutes(5), Amount(BigDecimal.valueOf(42)))
+        val oldOperation = Operation(
+            DEPOSIT, LocalDateTime.now(),
+            Amount(BigDecimal.valueOf(42))
+        )
+        val operation1 = Operation(
+            DEPOSIT, LocalDateTime.now().minusMinutes(5),
+            Amount(BigDecimal.valueOf(42))
+        )
         val repository = OperationRepositoryImpl(listOf(oldOperation))
 
         try {

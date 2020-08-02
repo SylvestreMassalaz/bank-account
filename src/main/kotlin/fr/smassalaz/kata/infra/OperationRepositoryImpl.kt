@@ -1,6 +1,11 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.infra
 
-class OperationRepositoryImpl(initialOperations: List<Operation> = listOf()) : OperationRepository {
+import fr.smassalaz.kata.business.Operation
+import fr.smassalaz.kata.business.OperationRepository
+import fr.smassalaz.kata.business.OperationTooOldException
+
+class OperationRepositoryImpl(initialOperations: List<Operation> = listOf()) :
+    OperationRepository {
 
     private val operations = initialOperations.toMutableList()
 

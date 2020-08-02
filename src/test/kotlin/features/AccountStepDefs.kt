@@ -1,10 +1,7 @@
 package features
 
-import fr.smassalaz.kata.*
-import fr.smassalaz.kata.Account
-import fr.smassalaz.kata.Amount
-import fr.smassalaz.kata.Operation
-import fr.smassalaz.kata.OperationType
+import fr.smassalaz.kata.business.*
+import fr.smassalaz.kata.infra.OperationRepositoryImpl
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.junit.Assert.assertEquals
@@ -95,7 +92,9 @@ class AccountStepDefs : En {
                     type = OperationType.valueOf(it.getValue("type")),
                     date = it.getValue("date").toLocalDateTime(),
                     amount = Amount(it.getValue("amount").toBigDecimal()),
-                    balance = Amount(it.getValue("balance").toBigDecimal())
+                    balance = Amount(
+                        it.getValue("balance").toBigDecimal()
+                    )
                 )
             }
 

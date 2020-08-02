@@ -1,4 +1,4 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.business
 
 import java.time.LocalDateTime
 import java.util.*

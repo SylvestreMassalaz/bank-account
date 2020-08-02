@@ -1,5 +1,6 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.business
 
+import fr.smassalaz.kata.business.Amount
 import org.junit.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals

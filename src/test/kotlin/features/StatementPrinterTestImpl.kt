@@ -1,7 +1,7 @@
 package features
 
-import fr.smassalaz.kata.Statement
-import fr.smassalaz.kata.StatementPrinter
+import fr.smassalaz.kata.business.Statement
+import fr.smassalaz.kata.business.StatementPrinter
 
 class StatementPrinterTestImpl: StatementPrinter {
 

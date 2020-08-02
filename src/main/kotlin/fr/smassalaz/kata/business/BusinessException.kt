@@ -1,4 +1,4 @@
-package fr.smassalaz.kata
+package fr.smassalaz.kata.business
 
 open class BusinessException(message: String): Exception(message)
 
