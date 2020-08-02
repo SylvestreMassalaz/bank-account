@@ -36,7 +36,7 @@ class AccountStepDefs : En {
 
             statementPrinter = StatementPrinterTestImpl()
 
-            account = Account(operationRepository, statementPrinter)
+            account = Account(operationRepository)
 
             caughtExceptions = mutableListOf()
         }
@@ -66,7 +66,7 @@ class AccountStepDefs : En {
         }
 
         When("The user prints it's statements") {
-            account.printStatements()
+            account.printStatements(statementPrinter)
         }
 
         Then("The operation should be accepted") {

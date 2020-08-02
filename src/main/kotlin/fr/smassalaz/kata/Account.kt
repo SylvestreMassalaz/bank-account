@@ -2,7 +2,7 @@ package fr.smassalaz.kata
 
 import java.time.LocalDateTime
 
-class Account(private val operationRepo: OperationRepository, private val printer: StatementPrinter) {
+class Account(private val operationRepo: OperationRepository) {
 
     fun deposit(amount: Amount, date: LocalDateTime) {
         operationRepo.addOperation(
@@ -19,7 +19,7 @@ class Account(private val operationRepo: OperationRepository, private val printe
         )
     }
 
-    fun printStatements() {
+    fun printStatements(printer: StatementPrinter) {
         var balance = Amount.ZERO
         val statements = operationRepo.getOperations().map {
             Statement(
