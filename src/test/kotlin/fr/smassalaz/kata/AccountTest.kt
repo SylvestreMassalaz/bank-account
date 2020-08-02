@@ -144,8 +144,8 @@ class AccountTest {
         verify(exactly = 1) {
             printer.printStatements(
                 listOf(
-                    Statement(DEPOSIT, baseDate, Amount(valueOf(2500)), Amount(valueOf(2500))),
-                    Statement(WITHDRAWAL, baseDate.plusMinutes(30), Amount(valueOf(770)), Amount(valueOf(1730)))
+                    Statement(WITHDRAWAL, baseDate.plusMinutes(30), Amount(valueOf(770)), Amount(valueOf(1730))),
+                    Statement(DEPOSIT, baseDate, Amount(valueOf(2500)), Amount(valueOf(2500)))
                 )
             )
         }

@@ -9,7 +9,7 @@ data class Operation(val type: OperationType, val date: LocalDateTime, val amoun
             throw NegativeAmountException()
         }
     }
-    fun computeBalance(old: Amount): Amount = type.apply(old, amount)
+    fun computeNextBalance(old: Amount): Amount = type.apply(old, amount)
 
     companion object {
         fun deposit(date: LocalDateTime, amount: Amount) =
