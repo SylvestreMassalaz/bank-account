@@ -3,6 +3,12 @@ package fr.smassalaz.kata
 import java.time.LocalDateTime
 
 data class Operation(val type: OperationType, val date: LocalDateTime, val amount: Amount) {
+
+    init {
+        if(amount.isNegative()) {
+            throw NegativeAmountException()
+        }
+    }
     fun computeBalance(old: Amount): Amount = type.apply(old, amount)
 
     companion object {

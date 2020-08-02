@@ -4,7 +4,6 @@ import fr.smassalaz.kata.OperationType.DEPOSIT
 import fr.smassalaz.kata.OperationType.WITHDRAWAL
 import io.mockk.*
 import org.junit.Test
-import java.math.BigDecimal
 import java.math.BigDecimal.valueOf
 import java.time.LocalDateTime
 
@@ -27,7 +26,7 @@ class AccountTest {
         }
     }
 
-    @Test(expected = NegativeAMountException::class)
+    @Test(expected = NegativeAmountException::class)
     fun `Making a deposit of a negative amount of money should be invalid`(){
         val repository = mockk<OperationRepository>()
         val printer = mockk<StatementPrinter>()
@@ -91,7 +90,7 @@ class AccountTest {
         }
     }
 
-    @Test(expected = NegativeAMountException::class)
+    @Test(expected = NegativeAmountException::class)
     fun `Making a withdrawal of a negative amount of money should be invalid`(){
         val repository = mockk<OperationRepository>()
         val printer = mockk<StatementPrinter>()

@@ -24,7 +24,7 @@ class AccountStepDefs : En {
 
     init {
         Given("There is an account with the following operations") { table: DataTable ->
-            val ops = table.asMaps().map {
+            val operations = table.asMaps().map {
                 Operation(
                     type = OperationType.valueOf(it.getValue("type")),
                     date = it.getValue("date").toLocalDateTime(),
@@ -32,7 +32,7 @@ class AccountStepDefs : En {
                 )
             }
 
-            operationRepository = OperationRepositoryImpl(ops)
+            operationRepository = OperationRepositoryImpl(operations)
 
             statementPrinter = StatementPrinterTestImpl()
 
