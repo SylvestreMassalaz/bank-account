@@ -1,7 +1,6 @@
 package fr.smassalaz.kata.business
 
 import java.time.LocalDateTime
-import java.util.*
 
 class Account(private val operationRepo: OperationRepository) {
 
@@ -22,19 +21,18 @@ class Account(private val operationRepo: OperationRepository) {
 
     fun printStatements(printer: StatementPrinter) {
         var balance = Amount.ZERO
-        val operationDeque = ArrayDeque<Statement>()
-        operationRepo.getOperations().forEach {
-            operationDeque.push(
+        val statements = operationRepo.getOperations()
+            .map {
                 Statement(
                     type = it.type,
                     date = it.date,
                     amount = it.amount,
                     balance = it.computeNextBalance(balance).apply { balance = this }
                 )
-            )
-        }
+            }
+            .asReversed()
 
-        printer.printStatements(operationDeque.toList())
+        printer.printStatements(statements)
     }
 
     private fun computeCurrentBalance() =
